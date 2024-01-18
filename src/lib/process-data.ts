@@ -1,23 +1,13 @@
 import { Edge, MarkerType, Node } from 'reactflow';
 import colors from 'tailwindcss/colors';
 
-import data from '../assets/eng.json' assert { type: 'json' };
-import finished from '../assets/finished.json' assert { type: 'json' };
-
-interface JsonData {
-  id: string;
-  name: string;
-  semester: number;
-  prerequisites: string[];
-  group: string;
-}
+import { curriculum, finished } from '@/assets/eng';
 
 interface Finished {
   [key: string]: boolean;
 }
 
 export function processData(): [Node[], Edge[]] {
-  const jsonData: JsonData[] = data;
   const userFinished: Finished = finished;
 
   const nodes: Node[] = [];
@@ -25,13 +15,13 @@ export function processData(): [Node[], Edge[]] {
 
   const semesters = new Set<number>();
 
-  for (let i = 0; i < jsonData.length; i++) {
-    semesters.add(jsonData[i].semester);
+  for (let i = 0; i < curriculum.length; i++) {
+    semesters.add(curriculum[i].semester);
   }
 
   const finishedSemesters = new Set<number>();
   for (const semester of semesters) {
-    const components = jsonData.filter(node => node.semester === semester);
+    const components = curriculum.filter(node => node.semester === semester);
 
     const ids = [];
     for (let i = 0; i < components.length; i++) {
@@ -71,8 +61,8 @@ export function processData(): [Node[], Edge[]] {
   let lastSemester = 0;
   let xpos = 0;
   // const semestersPlotted = new Set<number>();
-  for (let i = 0; i < jsonData.length; i++) {
-    const node = jsonData[i];
+  for (let i = 0; i < curriculum.length; i++) {
+    const node = curriculum[i];
 
     if (node.semester > lastSemester) {
       lastSemester = node.semester;

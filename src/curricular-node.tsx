@@ -1,9 +1,17 @@
 import { memo } from 'react';
 import { Handle, Position } from 'reactflow';
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+
 interface CurricularNodeProps {
   data: {
     code: string;
+    name: string;
     color: string;
   };
 }
@@ -14,7 +22,18 @@ function CurricularNode({ data }: CurricularNodeProps) {
       className="w-16 h-16 grid shadow-md rounded-full border-2 border-stone-400"
       style={{ backgroundColor: data.color }}
     >
-      <div className="text-lg font-bold place-self-center">{data.code}</div>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <div className="text-lg font-bold place-self-center">
+              {data.code}
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className="text-lg">{data.name}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       <Handle
         type="target"
