@@ -4,7 +4,7 @@ import colors from 'tailwindcss/colors';
 import { curriculum, finished } from '@/assets/eng';
 
 interface Finished {
-  [key: string]: boolean;
+  [key: string]: string;
 }
 
 export function processData(): [Node[], Edge[]] {
@@ -34,7 +34,10 @@ export function processData(): [Node[], Edge[]] {
 
     let finished = true;
     for (const id of ids) {
-      if (!userFinished[id]) {
+      if (
+        userFinished[id] === 'not-started' ||
+        userFinished[id] === 'in-progress'
+      ) {
         finished = false;
       }
     }
@@ -69,37 +72,19 @@ export function processData(): [Node[], Edge[]] {
       xpos = 0;
     }
 
-    let color: string;
-    // switch (node.group) {
-    //   case 'base':
-    //     color = colors.orange[500];
-    //     break;
-    //   case 'electronics':
-    //     color = colors.orange[300];
-    //     break;
-    //   case 'programming':
-    //     color = colors.green[500];
-    //     break;
-    //   case 'networks':
-    //     color = colors.green[300];
-    //     break;
-    //   case 'communications':
-    //     color = colors.purple[500];
-    //     break;
-    //   case 'signals':
-    //     color = colors.blue[500];
-    //     break;
-    //   case 'extra':
-    //     color = colors.gray[300];
-    //     break;
-    //   default:
-    //     color = colors.black;
-    // }
-
-    if (userFinished[node.id]) {
-      color = colors.green[200];
-    } else {
-      color = colors.red[200];
+    let color: string = colors.gray[200];
+    switch (userFinished[node.id]) {
+      case 'not-started':
+        color = colors.red[200];
+        break;
+      case 'in-progress':
+        color = colors.blue[200];
+        break;
+      case 'finished':
+        color = colors.green[200];
+        break;
+      default:
+        break;
     }
 
     let allPrereqsFinished = true;
@@ -126,7 +111,7 @@ export function processData(): [Node[], Edge[]] {
       } as Edge);
     }
 
-    if (allPrereqsFinished && !userFinished[node.id]) {
+    if (allPrereqsFinished && userFinished[node.id] === 'not-started') {
       color = colors.yellow[200];
     }
 
